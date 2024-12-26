@@ -151,7 +151,14 @@ class WBApiConn:
                   f"Status code: {report_raw.status_code}\n"
                   f"Response: {report_raw.text}")
             return []
-        return report_raw.json()
+
+        # a bit extend report with datetime
+        result = report_raw.json()
+        now = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
+        for row in result:
+            row['datetime'] = now
+
+        return result
 
     # Get detailed financial reports (GET /api/v5/supplier/reportDetailByPeriod), period 24 hours
     def get_financial_report(self, first_use=False) -> list:

@@ -147,6 +147,7 @@ class WarehousesReport(BaseModel):
     inWayFromClient = IntegerField(null=True)
     quantityWarehousesFull = IntegerField(null=True)
     warehouses = JSONField(null=True)
+    datetime = DateTimeField(null=True)
     UserID = CharField(max_length=36, null=True)  # Always included
 
     class Meta:
