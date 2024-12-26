@@ -10,7 +10,8 @@ class BaseModel(Model):
         database = mysql_db
 
 class ProductCards(BaseModel):
-    nmID = IntegerField(primary_key=True)
+    auto_id = IntegerField(primary_key=True) # default auto_increment
+    nmID = IntegerField(null=True)
     imtID = IntegerField(null=True)
     nmUUID = CharField(max_length=255, null=True)
     subjectID = IntegerField(null=True)
@@ -31,10 +32,14 @@ class ProductCards(BaseModel):
 
     class Meta:
         table_name = 'ProductCards'
+        indexes = (
+            (('nmID', 'UserID'), True),
+        )
 
 
 class ProductPrices(BaseModel):
-    nmID = IntegerField(primary_key=True)
+    auto_id = IntegerField(primary_key=True)  # default auto_increment
+    nmID = IntegerField(null=True)
     vendorCode = CharField(max_length=255, null=True)
     sizes = JSONField(null=True)
     currencyIsoCode4217 = CharField(max_length=3, null=True)
@@ -45,9 +50,13 @@ class ProductPrices(BaseModel):
 
     class Meta:
         table_name = "ProductPrices"
+        indexes = (
+            (('nmID', 'UserID'), True),
+        )
 
 
 class OrdersStats(BaseModel):
+    auto_id = IntegerField(primary_key=True)  # default auto_increment
     date = DateTimeField(null=True)
     lastChangeDate = DateTimeField(null=True)
     warehouseName = CharField(max_length=255, null=True)
@@ -75,14 +84,18 @@ class OrdersStats(BaseModel):
     orderType = CharField(max_length=255, null=True)
     sticker = CharField(max_length=255, null=True)
     gNumber = CharField(max_length=255, null=True)
-    srid = CharField(max_length=255, primary_key=True)
+    srid = CharField(max_length=255, null=True)
     UserID = CharField(max_length=36, null=True)
 
     class Meta:
         table_name = "OrdersStats"
+        indexes = (
+            (('srid', 'UserID'), True),
+        )
 
 
 class SalesStats(BaseModel):
+    auto_id = IntegerField(primary_key=True)  # default auto_increment
     date = DateTimeField(null=True)
     lastChangeDate = DateTimeField(null=True)
     warehouseName = CharField(max_length=255, null=True)
@@ -111,18 +124,22 @@ class SalesStats(BaseModel):
     orderType = CharField(max_length=255, null=True)
     sticker = CharField(max_length=255, null=True)
     gNumber = CharField(max_length=255, null=True)
-    srid = CharField(max_length=255, primary_key=True)
+    srid = CharField(max_length=255, null=True)
     UserID = CharField(max_length=36, null=True)
 
     class Meta:
         table_name = "SalesStats"
+        indexes = (
+            (('srid', 'UserID'), True),
+        )
 
 
 class WarehousesReport(BaseModel):
+    auto_id = IntegerField(primary_key=True)  # default auto_increment
     brand = CharField(max_length=255, null=True)
     subjectName = CharField(max_length=255, null=True)
     nmId = IntegerField(null=True)
-    barcode = CharField(max_length=255, primary_key=True)  # Primary key
+    barcode = CharField(max_length=255, null=True)
     vendorCode = CharField(max_length=255, null=True)
     techSize = CharField(max_length=255, null=True)
     volume = FloatField(null=True)
@@ -134,9 +151,13 @@ class WarehousesReport(BaseModel):
 
     class Meta:
         table_name = "WarehousesReport"
+        indexes = (
+            (('barcode', 'UserID'), True),
+        )
 
 
 class FinancialReport(BaseModel):
+    auto_id = IntegerField(primary_key=True)  # default auto_increment
     realizationreport_id = IntegerField(null=True)
     date_from = DateField(null=True)
     date_to = DateField(null=True)
@@ -144,7 +165,7 @@ class FinancialReport(BaseModel):
     currency_name = CharField(max_length=255, null=True)
     suppliercontract_code = CharField(max_length=255, null=True)
     # for rrd_id we need to have 64 bit integer
-    rrd_id = BigIntegerField(primary_key=True)
+    rrd_id = BigIntegerField(null=True)
     gi_id = IntegerField(null=True)
     fix_tariff_date_from = DateField(null=True)
     fix_tariff_date_to = DateField(null=True)
@@ -214,9 +235,13 @@ class FinancialReport(BaseModel):
 
     class Meta:
         table_name = "FinancialReport"
+        indexes = (
+            (('rrd_id', 'UserID'), True),
+        )
 
 
 class ProductAdverts(BaseModel):
+    auto_id = IntegerField(primary_key=True)  # default auto_increment
     endTime = DateTimeField(null=True)
     createTime = DateTimeField(null=True)
     changeTime = DateTimeField(null=True)
@@ -224,7 +249,7 @@ class ProductAdverts(BaseModel):
     params = JSONField(null=True)
     name = CharField(max_length=255, null=True)
     dailyBudget = IntegerField(null=True)
-    advertId = IntegerField(primary_key=True)  # Primary key
+    advertId = IntegerField(null=True)
     status = IntegerField(null=True)
     type = IntegerField(null=True)
     paymentType = CharField(max_length=255, null=True)
@@ -233,9 +258,13 @@ class ProductAdverts(BaseModel):
 
     class Meta:
         table_name = "ProductAdverts"
+        indexes = (
+            (('advertId', 'UserID'), True),
+        )
 
 
 class ProductPromos(BaseModel):
+    auto_id = IntegerField(primary_key=True)  # default auto_increment
     views = IntegerField(null=True)
     clicks = IntegerField(null=True)
     ctr = FloatField(null=True)
@@ -255,14 +284,15 @@ class ProductPromos(BaseModel):
 
     class Meta:
         table_name = "ProductPromos"
-        # make combo (advertId, nmId, date, appType) unique
+        # make combo (advertId, nmId, date, appType, userID) unique
         indexes = (
-            (('advertId', 'nmId', 'date', 'appType'), True),
+            (('advertId', 'nmId', 'date', 'appType', 'userID'), True),
         )
 
 
 class PromoCalendar(BaseModel):
-    id = IntegerField(primary_key=True)  # Primary key
+    auto_id = IntegerField(primary_key=True)  # default auto_increment
+    id = IntegerField(null=True)
     name = CharField(max_length=255, null=True)
     description = TextField(null=True)
     advantages = JSONField(null=True)
@@ -281,6 +311,9 @@ class PromoCalendar(BaseModel):
 
     class Meta:
         table_name = "PromoCalendar"
+        indexes = (
+            (('id', 'UserID'), True),
+        )
 
 
 class APIKeys(BaseModel):
@@ -421,14 +454,14 @@ if __name__ == '__main__':
     mysql_db.init(
         'budibasemp',
         user='budibase',
-        password='vPu*f44E)s{!UA',
+        password='PASSWORD',
         host='147.45.168.55',
         port=3306
     )
 
     # connect to WB API
-    token = 'eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjQxMjE3djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTc1MDQ4MDI0MSwiaWQiOiIwMTkzZTRlOC0yZGQ5LTc1MDgtYTk3My01ZjQzMTMyMzA2ZTEiLCJpaWQiOjEyNjg3ODA2LCJvaWQiOjc4ODE3LCJzIjoxMDczNzQ5NzU4LCJzaWQiOiJiNzJkNjdmYS1lY2MyLTU0NmYtODgyMi02MDJlYmM1YThkYTQiLCJ0IjpmYWxzZSwidWlkIjoxMjY4NzgwNn0.y0xfCzhKHgYwaWIU4BOllAfQvnVfRA78nPONHzjD9YwsAlZQnqy49tEja1M6N4rCK5IHROK7d5R8gO7_s8Qiog'
-    user_id = 'f51b0c9d-c0ba-11ef-8773-545200604c68'
+    token = 'TOKEN'
+    user_id = 'USER_ID'
     writer = Writer(token, user_id)
 
     #writer.run()

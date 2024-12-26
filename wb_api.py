@@ -114,7 +114,13 @@ class WBApiConn:
         }
 
         # start report generation
-        report_id_raw = requests.get(base_url, params=params, headers=self.headers)
+        # NOTICE: fix for multi-threaded data receiver
+        while True:
+            report_id_raw = requests.get(base_url, params=params, headers=self.headers)
+            if report_id_raw.status_code != 429:
+                break
+            sleep(60)
+
         # check status is 200 (OK)
         if report_id_raw.status_code != 200:
             print("Error on creating warehouse report\n"
@@ -133,7 +139,12 @@ class WBApiConn:
             sleep(5)
 
         # get report
-        report_raw = requests.get(f'{report_url}/download', headers=self.headers)
+        while True:
+            report_raw = requests.get(f'{report_url}/download', headers=self.headers)
+            if report_raw.status_code != 429:
+                break
+            sleep(60)
+
         # check status is 200 (OK)
         if report_raw.status_code != 200:
             print("Error on downloading warehouse report\n"
