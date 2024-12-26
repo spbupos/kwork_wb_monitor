@@ -251,8 +251,8 @@ class ProductAdverts(BaseModel):
     name = CharField(max_length=255, null=True)
     dailyBudget = IntegerField(null=True)
     advertId = IntegerField(null=True)
-    status = IntegerField(null=True)
-    type = IntegerField(null=True)
+    status = CharField(max_length=255, null=True)
+    type = CharField(max_length=255, null=True)
     paymentType = CharField(max_length=255, null=True)
     searchPluseState = BooleanField(null=True)
     UserID = CharField(max_length=36, null=True)  # Always included

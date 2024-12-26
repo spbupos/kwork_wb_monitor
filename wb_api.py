@@ -219,6 +219,27 @@ class WBApiConn:
 
         result = []
         limit_dt = datetime.now() - timedelta(days=(30 if first_use else 0))
+
+        type_decrypt = {
+            4: "В каталоге",
+            5: "В карточке товара",
+            6: "В поиске",
+            7: "На главной странице",
+            8: "Авто-акция",
+            9: "Аукцион"
+        }
+        status_decrypt = {
+            -1: "Удаляется",
+            4: "Ожидает запуска",
+            7: "Завершена",
+            8: "Отказ",
+            9: "Идут показы",
+            11: "Приостановлена"
+        }
+        payment_type_decrypt = {
+            "cpm": "За показы",
+            "cpo": "За заказы"
+        }
         for i in range(blocks):
             start = i * limit
             end = min((i + 1) * limit, len(self.adv_ids))
@@ -232,10 +253,16 @@ class WBApiConn:
 
             sub_result = raw_result.json()
             for entry in sub_result:
+                # unify params format
                 if "autoParams" in entry:
                     entry["params"] = entry.pop("autoParams")
                 if "unitedParams" in entry:
                     entry["params"] = entry.pop("unitedParams")
+
+                # make some values human-readable
+                entry['type'] = type_decrypt.get(entry['type'], 'Неизвестно')
+                entry['status'] = status_decrypt.get(entry['status'], 'Неизвестно')
+                entry['paymentType'] = payment_type_decrypt.get(entry['paymentType'], 'Неизвестно')
 
                 # add advert to self.prom_ids if it's endTime >= today
                 end_dt = parser.parse(entry['endTime'])
