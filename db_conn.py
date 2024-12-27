@@ -153,7 +153,7 @@ class WarehousesReport(BaseModel):
     class Meta:
         table_name = "WarehousesReport"
         indexes = (
-            (('barcode', 'UserID'), True),
+            (('barcode', 'datetime', 'UserID'), True),
         )
 
 
@@ -407,8 +407,8 @@ class Writer:
         except Exception as e:
             print(f'Error while getting warehouses report: {e}, skipping...')
 
-        # run every week
-        if self.run_number % (60 * 24 * 7 / 30) == 0:
+        # run every day
+        if self.run_number % (60 * 24 / 30) == 0:
             print('Getting financial report...')
             try:
                 data = self.conn.get_financial_report(first_use=(self.run_number == 0))
